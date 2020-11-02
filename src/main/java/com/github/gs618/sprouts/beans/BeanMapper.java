@@ -1,4 +1,4 @@
-package com.github.sprouts.beans;
+package com.github.gs618.sprouts.beans;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

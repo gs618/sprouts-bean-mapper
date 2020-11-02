@@ -1,4 +1,4 @@
-package com.github.sprouts.beans;
+package com.github.gs618.sprouts.beans;
 
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * @author sgao
  */
-@SupportedAnnotationTypes({"com.github.sprouts.beans.BeanMapper"})
+@SupportedAnnotationTypes({"com.github.gs618.sprouts.beans.BeanMapper"})
 public class BeanMapperProcessor extends AbstractProcessor {
 
     /**
