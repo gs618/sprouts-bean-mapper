@@ -23,6 +23,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 
@@ -81,19 +82,29 @@ public class BeanMapperProcessor extends AbstractProcessor {
                 @Override
                 public void visitClassDef(JCTree.JCClassDecl jcClassDecl) {
                     java.util.List<? extends Element> enclosedElements = element.getEnclosedElements();
+
+                    // list all local field, mapping target can't be any field.
+                    java.util.List<Element> fieldElements = new ArrayList<>();
+                    java.util.List<String> fieldStrings = new ArrayList<>();
                     for (Element enclosedElement : enclosedElements) {
-                        if (!enclosedElement.getKind().isField()) {
-                            continue;
+                        if (enclosedElement.getKind().isField()) {
+                            fieldElements.add(enclosedElement);
+                            fieldStrings.add(enclosedElement.getSimpleName().toString());
                         }
-                        BeanMapper annotation = enclosedElement.getAnnotation(BeanMapper.class);
+                    }
+
+                    for (Element fieldElement : fieldElements) {
+                        BeanMapper annotation = fieldElement.getAnnotation(BeanMapper.class);
                         if (Objects.isNull(annotation)) {
                             continue;
                         }
-                        JCTree field = trees.getTree(enclosedElement);
+                        JCTree field = trees.getTree(fieldElement);
                         JCTree.JCVariableDecl jcVariableDecl = (JCTree.JCVariableDecl) field;
                         String[] mappings = annotation.targets();
                         for (String mapping : mappings) {
-                            jcClassDecl.defs = jcClassDecl.defs.prepend(generateSetterMethod(jcVariableDecl, mapping));
+                            if (!fieldStrings.contains(mapping)) {
+                                jcClassDecl.defs = jcClassDecl.defs.prepend(generateSetterMethod(jcVariableDecl, mapping));
+                            }
                         }
                     }
                     super.visitClassDef(jcClassDecl);
@@ -138,7 +149,7 @@ public class BeanMapperProcessor extends AbstractProcessor {
      * 生成Set方法
      *
      * @param jcVariable jc变量描述
-     * @param mapping 映射的set名称
+     * @param mapping    映射的set名称
      * @return 方法定义描述
      */
     private JCTree.JCMethodDecl generateSetterMethod(JCTree.JCVariableDecl jcVariable, String mapping) {
@@ -172,7 +183,7 @@ public class BeanMapperProcessor extends AbstractProcessor {
     /**
      * 生成set/get格式的方法名
      *
-     * @param name 需要set/get的变量名称
+     * @param name   需要set/get的变量名称
      * @param prefix set｜get作为前缀
      * @return Name描述
      */
