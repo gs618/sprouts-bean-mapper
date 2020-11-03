@@ -21,7 +21,7 @@ sprouts-bean-mapper解决了bean中不同属性名称映射的问题. 通过spro
 <dependency>
   <groupId>com.github.gs618</groupId>
   <artifactId>sprouts-bean-mapper</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <scope>provided</scope>
 </dependency>
 ```
