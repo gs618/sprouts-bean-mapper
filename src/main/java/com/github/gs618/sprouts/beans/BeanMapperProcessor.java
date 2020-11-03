@@ -103,6 +103,7 @@ public class BeanMapperProcessor extends AbstractProcessor {
                         String[] mappings = annotation.targets();
                         for (String mapping : mappings) {
                             if (!fieldStrings.contains(mapping)) {
+                                treeMaker.pos = jcClassDecl.pos;
                                 jcClassDecl.defs = jcClassDecl.defs.prepend(generateSetterMethod(jcVariableDecl, mapping));
                             }
                         }
@@ -176,6 +177,7 @@ public class BeanMapperProcessor extends AbstractProcessor {
         List<JCTree.JCVariableDecl> parameters = List.of(variableDecl);
         //声明异常
         List<JCTree.JCExpression> throwsClauses = List.nil();
+        //构建方法
         return treeMaker
                 .MethodDef(modifiers, methodName, returnType, typeParameters, parameters, throwsClauses, jcBlock, null);
     }
