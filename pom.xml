@@ -12,7 +12,7 @@
   <url>https://github.com/gs618/sprouts-bean-mapper</url>
 
   <properties>
-    <revision>1.0.0</revision>
+    <revision>1.0.1</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
   </properties>
