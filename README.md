@@ -15,18 +15,18 @@ sprouts-bean-mapper解决了bean中不同属性名称映射的问题. 通过spro
 
 ### 使用方式
 
-(1) 添加Maven引用
+(1)添加Maven引用
 
 ```xml
 <dependency>
-  <groupId>com.github.gs618</groupId>
-  <artifactId>sprouts-bean-mapper</artifactId>
-  <version>1.0.1</version>
+	<groupId>com.github.gs618</groupId>
+	<artifactId>sprouts-bean-mapper</artifactId>
+	<version>1.0.0</version>
   <scope>provided</scope>
 </dependency>
 ```
 
-(2) 在目标bean的属性上添加@BeanMapper注解
+(2)在目标bean的属性上添加@BeanMapper注解, 下面我们要复制ObjectB到ObjectC
 
 ```java
 public class ObjectC {
@@ -41,13 +41,58 @@ public class ObjectC {
     private int iField;
 
 }
+
+public class ObjectB {
+
+    private ObjectA objectA;
+
+    private String stringField;
+
+    private int intField;
+
+    private long longField;
+
+}
+
+/**
+ * Object A 只标志了一个类, 代表复杂类型
+ */
+public class ObjectA {
+
+    private String stringField;
+
+}
 ```
 
-(3) 使用Spring的BeanUtils复制对象即可
+(3)使用Spring的BeanUtils复制对象即可
 
-(4) Sample请参考下面链接
+```
+ public static void main(String[] args) {
+    ObjectA objectA = new ObjectA("Hello ObjectA");
+    System.out.println(objectA.toString());
+    ObjectB objectB = new ObjectB(objectA, "StringInB", 100, 1000L);
+    System.out.println(objectB.toString());
+
+    ObjectC objectC = new ObjectC();
+    System.out.println(objectC.toString());
+    BeanUtils.copyProperties(objectB, objectC);
+    System.out.println(objectC.toString());
+}
+```
+
+(4)结果如下
+
+```shell
+ObjectA(stringField=Hello ObjectA)
+ObjectB(objectA=ObjectA(stringField=Hello ObjectA), stringField=StringInB, intField=100, longField=1000)
+ObjectC(objA=null, strField=null, iField=0)
+ObjectC(objA=ObjectA(stringField=Hello ObjectA), strField=StringInB, iField=100)
+```
+
+(5)Sample请参考下面链接
 
 [Sample](https://github.com/gs618/sprouts-bean-mapper-sample)
+
 
 
 
